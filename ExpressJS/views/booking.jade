@@ -1,0 +1,61 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title} Page
+	form(id="bform" class="col-md-6")
+		div(class="form-group")
+			label Full Name 
+			input(id="bname" name="bname" type="text" class="form-control")
+		div(class="form-group")
+			label Start Time
+			div(class="input-group")
+				input(id="bstartdate" name="bstartdate" type="date" class="form-control input-group-prepend")
+				input(id="bstarttime" name="bstarttime" type="time" class="form-control")
+		// div(class="form-group")
+		// 	label End Time
+		// 	div(class="input-group")
+		// 		input(id="benddate" type="date" class="form-control input-group-prepend" value="2019-12-20")
+		// 		input(id="bendtime" type="time" class="form-control" value="15:00:00")
+		button(id="bsend" type="button" class="btn btn-primary") Send
+
+	ul(id="list" style="display: block; padding-top: 30px;")
+		each booking in list
+			li
+				div= booking.name
+				div= booking.start
+				div= booking.end
+
+
+block script
+	script.
+		$(function() {
+			var $bsend = $('#bsend');
+
+			$bsend.click(function(e) {
+				console.log('click');
+				e.preventDefault();
+
+				var bname = $('#bname').val();
+				var bstartdate = $('#bstartdate').val();
+				var bstarttime = $('#bstarttime').val();
+				// var benddate = $('#benddate').val();
+				// var bendtime = $('#bendtime').val();
+				console.dir(bname);
+				console.dir(bstartdate);
+				console.dir(bstarttime);
+				// console.dir(benddate);
+				// console.dir(bendtime);
+
+				var d = {
+					name: bname,
+					startdate: bstartdate,
+					starttime: bstarttime
+				}
+				$.post('/booking/add', d, function(data) {
+					console.dir(data);
+					$('#list').append("<li><div>" + data.name + "</div><div>" + new Date(data.start) + "</div><div>" + new Date(data.end) + "</div></li>")
+				});
+			});
+		});
+
